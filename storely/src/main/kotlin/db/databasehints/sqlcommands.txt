@@ -1,0 +1,99 @@
+CREATE TABLE IF NOT EXISTS Favorites (
+  idFavorites SERIAL PRIMARY KEY, -- Unique ID for each favorite
+  Users_idUsers INT NOT NULL, -- User ID (foreign key to Users)
+  Products_idProducts INT NOT NULL, -- Product ID (foreign key to Products)
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Timestamp of when the product was added to favorites
+  CONSTRAINT fk_Favorites_Users FOREIGN KEY (Users_idUsers)
+    REFERENCES "users" (idUsers)
+    ON DELETE CASCADE, -- Delete favorites if the user is deleted
+  CONSTRAINT fk_Favorites_Products FOREIGN KEY (Products_idProducts)
+    REFERENCES "products" (idProducts)
+    ON DELETE CASCADE, -- Delete favorites if the product is deleted
+  CONSTRAINT unique_favorite UNIQUE (Users_idUsers, Products_idProducts) -- Ensure a user can't add the same product as a favorite twice
+);
+
+-- Create Schema
+CREATE SCHEMA IF NOT EXISTS storely_first_database;
+SET search_path TO storely_first_database;
+
+-- Users Table
+CREATE TABLE IF NOT EXISTS Users (
+  idUsers SERIAL PRIMARY KEY,
+  nameUsers VARCHAR(45) NOT NULL,
+  emailUsers VARCHAR(45) NOT NULL UNIQUE,
+  passwordUsers VARCHAR(45) NOT NULL,
+  addressUsers TEXT NULL,
+  phoneUsers VARCHAR(45) NULL
+);
+
+-- Categories Table
+CREATE TABLE IF NOT EXISTS Categories (
+  idCategories SERIAL PRIMARY KEY,
+  nameCategories VARCHAR(45) NOT NULL UNIQUE
+);
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS Products (
+  idProducts SERIAL PRIMARY KEY,
+  nameProducts VARCHAR(45) NOT NULL,
+  descriptionProducts TEXT NULL,
+  priceProducts DECIMAL(10,2) NOT NULL,
+  stockProducts INT NULL,
+  Categories_idCategories INT NOT NULL,
+  imageURLProducts VARCHAR(2083) NULL,
+  createdAt TIMESTAMP NULL,
+  CONSTRAINT fk_Products_Categories
+    FOREIGN KEY (Categories_idCategories)
+    REFERENCES Categories (idCategories)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+-- Orders Table
+CREATE TABLE IF NOT EXISTS Orders (
+  idOrders SERIAL PRIMARY KEY,
+  Order_date TIMESTAMP NULL,
+  Order_Status VARCHAR(50) NULL,
+  total_amount_Order DECIMAL(10,2) NOT NULL,
+  Users_idUsers INT NOT NULL,
+  CONSTRAINT fk_Orders_Users1
+    FOREIGN KEY (Users_idUsers)
+    REFERENCES Users (idUsers)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+-- Order_Items Table
+CREATE TABLE IF NOT EXISTS Order_Items (
+  idOrder_Items SERIAL,
+  Orders_idOrders INT NOT NULL,
+  Products_idProducts INT NOT NULL,
+  Order_Items_quantity INT NOT NULL,
+  Order_Items_price DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (idOrder_Items, Orders_idOrders, Products_idProducts),
+  CONSTRAINT fk_Order_Items_Orders1
+    FOREIGN KEY (Orders_idOrders)
+    REFERENCES Orders (idOrders)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT fk_Order_Items_Products1
+    FOREIGN KEY (Products_idProducts)
+    REFERENCES Products (idProducts)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
+
+-- Payments Table
+CREATE TABLE IF NOT EXISTS Payments (
+  idPayment SERIAL PRIMARY KEY,
+  payment_date TIMESTAMP NULL,
+  Orders_idOrders INT NOT NULL,
+  PaymentsMethod VARCHAR(45) NOT NULL,
+  PaymentStatus VARCHAR(45) NOT NULL,
+  PaymentDate TIMESTAMP NULL,
+  CONSTRAINT fk_Payments_Orders1
+    FOREIGN KEY (Orders_idOrders)
+    REFERENCES Orders (idOrders)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);

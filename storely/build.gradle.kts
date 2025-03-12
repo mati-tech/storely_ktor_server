@@ -25,12 +25,26 @@ dependencies {
     implementation(libs.ktor.server.content.negotiation)
     implementation(libs.postgresql)
     implementation(libs.h2)
-    implementation(libs.exposed.core)
+
+
     implementation(libs.exposed.jdbc)
+
     implementation(libs.ktor.server.host.common)
     implementation(libs.ktor.server.status.pages)
     implementation(libs.ktor.server.netty)
     implementation(libs.logback.classic)
+//
+//    implementation(libs.exposed.jdbc)
+//    implementation(libs.exposed.core)
+//    implementation("org.jetbrains.exposed:exposed-dao:0.43.0")
+//    implementation("org.jetbrains.exposed:exposed-java-time:0.44.0")
+
+
+    implementation("org.jetbrains.exposed:exposed-core:0.59.0")
+    implementation("org.jetbrains.exposed:exposed-dao:0.59.0") // Update this
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.59.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.59.0")
+
     implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
