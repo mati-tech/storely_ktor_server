@@ -21,7 +21,7 @@ class ProductPostgresRepo : ProductRepository {
 
     override suspend fun findByName(name: String): List<Product> {
         return transaction {
-            ProductDao.find { ProductTable.name eq name }
+            ProductDao.find { ProductTable.name like "%${name.lowercase().replaceFirstChar { it.titlecase() }}%" }
                 .map { it.toProduct() }
         }
     }

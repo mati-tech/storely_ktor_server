@@ -11,9 +11,6 @@ import io.ktor.server.routing.*
 import io.ktor.server.response.*
 
 fun Application.configureProductRouting(repository: ProductRepository) {
-    install(ContentNegotiation) {
-        json()
-    }
     routing {
         route("/products") {
             // Get all products
@@ -71,9 +68,10 @@ fun Application.configureProductRouting(repository: ProductRepository) {
                 if (repository.deleteById(productId)) {
                     call.respond(HttpStatusCode.NoContent)
                 } else {
-                    call.respond(HttpStatusCode.NotFound )
+                    call.respond(HttpStatusCode.NotFound)
                 }
             }
         }
     }
+
 }

@@ -1,24 +1,25 @@
 package com.mati.repositories
 
 import com.mati.dao.UserDao
+import com.mati.model.User
 
 // Define the repository interface for the User entity
 interface UserRepository {
 
     // Create a new User
-    suspend fun createUser(name: String, email: String, password: String, address: String, phone: String): UserDao
+    suspend fun createUser(user: User): User
 
     // Get a user by ID
-    suspend fun getUserById(id: Int): UserDao?
+    suspend fun getUserById(id: Int): User?
 
     // Get a user by email
-    suspend fun getUserByEmail(email: String): UserDao?
+    suspend fun getUserByEmail(email: String): User?
 
     // Get all users
-    suspend fun getAllUsers(): List<UserDao>
+    suspend fun getAllUsers(): List<User>
 
     // Update a user
-    suspend fun updateUser(id: Int, name: String, email: String, password: String, address: String, phone: String): UserDao?
+    suspend fun updateUser(id: Int, user:User ): Boolean
 
     // Delete a user by ID
     suspend fun deleteUser(id: Int): Boolean

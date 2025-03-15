@@ -1,5 +1,7 @@
 package com.mati.plugins
 
+import com.mati.repositories.ProductRepository
+import com.mati.repositories.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -16,7 +18,7 @@ fun Application.configureRouting() {
     }
     routing {
         get("/") {
-            call.respondText("Hello World!")
+            call.respondText("Welcome to Storely!")
         }
         staticResources("/static", "static")
     }
