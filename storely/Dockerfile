@@ -1,24 +1,13 @@
-# ---------- build stage ----------
-    FROM gradle:8.5-jdk17 AS build       # Gradle + JDK
-    WORKDIR /app
-    
-    # Copy project files
-    COPY . .
-    
-    # Build a fat‑jar (adjust the task if you use a different plugin)
-    RUN gradle clean shadowJar           
-    
-    # ---------- runtime stage ----------
-    FROM eclipse-temurin:17-jre          # Slim JRE for production
-    WORKDIR /app
-    
-    # Copy the jar produced in the build stage
-    COPY --from=build /app/build/libs/*.jar app.jar
-    
-    # Render sets $PORT for you; default to 8080 locally
-    ENV PORT=8080
-    EXPOSE 8080
-    
-    # Run the application
-    CMD ["sh", "-c", "java -jar app.jar --server.port=$PORT"]
-    
+# Stage 1: Build the application
+FROM gradle:8.8-jdk17 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle buildFatJar --no-daemon
+
+# Stage 2: Create the runtime image
+FROM openjdk:17-jdk-slim
+EXPOSE 8080
+RUN mkdir /app
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/storely.jar
+COPY src/main/resources/static /app/static
+ENTRYPOINT ["java", "-jar", "/app/storely.jar"]
