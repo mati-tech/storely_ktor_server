@@ -1,11 +1,11 @@
 # ---------- build stage ----------
-    FROM gradle:8.5-jdk17 AS build       # Gradle + JDK
+    FROM gradle:8.5-jdk17 AS build       
     WORKDIR /app
     COPY . .
-    RUN gradle clean shadowJar           # or `gradle build` if you produce a fat‑jar another way
+    RUN gradle clean shadowJar           
     
     # ---------- runtime stage ----------
-    FROM eclipse-temurin:17-jre          # Slim JRE
+    FROM eclipse-temurin:17-jre          
     WORKDIR /app
     # copy the fat‑jar from the build stage
     COPY --from=build /app/build/libs/*.jar app.jar
